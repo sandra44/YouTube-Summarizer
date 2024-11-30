@@ -9,12 +9,6 @@ A Model Context Protocol server that allows you to download subtitles from YouTu
 - Timestamps included in transcript
 - Works with any MCP-compatible client
 
-## Installation
-
-```bash
-pip install youtube_transcript_api mcp
-```
-
 ## Usage
 
 ### In your MCP client configuration:
