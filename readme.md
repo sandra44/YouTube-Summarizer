@@ -17,7 +17,7 @@ A Model Context Protocol server that allows you to download subtitles from YouTu
 "mcpServers": {
     "youtube": {
       "command": "uvx",
-      "args": ["github:adhikasp/mcp-youtube"]
+      "args": ["--from", "git+https://github.com/adhikasp/mcp-youtube", "mcp-youtube"]
     },
 }
 ```
