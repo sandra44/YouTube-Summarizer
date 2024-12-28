@@ -3,6 +3,8 @@ from mcp.server.models import InitializationOptions
 import mcp.server.stdio
 import mcp.types as types
 from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api._errors import NoTranscriptFound
+from youtube_transcript_api._transcripts import Transcript
 from urllib.parse import urlparse, parse_qs
 import asyncio
 import pydantic
@@ -13,6 +15,8 @@ server = Server("youtube-transcript")
 class YoutubeTranscript(pydantic.BaseModel):
     video_url: str
     with_timestamps: bool = False
+    language: str = "en"
+
 def extract_video_id(url: str) -> str:
     """Extract video ID from various forms of YouTube URLs."""
     parsed = urlparse(url)
@@ -25,9 +29,19 @@ def extract_video_id(url: str) -> str:
             return parsed.path[3:]
     raise ValueError("Could not extract video ID from URL")
 
-def get_transcript(video_id: str, with_timestamps: bool = False) -> str:
+def get_transcript(video_id: str, with_timestamps: bool = False, language: str = "en") -> str:
     """Get transcript for a video ID and format it as readable text."""
-    transcript = YouTubeTranscriptApi.get_transcript(video_id)
+    transcript: Transcript = None
+    available_transcripts = YouTubeTranscriptApi.list_transcripts(video_id)
+    try:
+        transcript = available_transcripts.find_transcript([language])
+    except NoTranscriptFound:
+        for t in available_transcripts:
+            transcript = t
+            break
+        else:
+            return f"No transcript found for video {video_id}"
+    transcript = transcript.fetch()
     if with_timestamps:
         def format_timestamp(seconds: float) -> str:
             hours = int(seconds // 3600)
@@ -47,7 +61,7 @@ async def handle_list_tools() -> types.ListToolsResult:
         types.Tool(
             name="youtube-transcript",
             description="Get transcript from YouTube videos",
-            inputSchema=YoutubeTranscript.schema()
+            inputSchema=YoutubeTranscript.model_json_schema()
         )
     ]
 
@@ -55,13 +69,14 @@ async def handle_list_tools() -> types.ListToolsResult:
 async def handle_call_tool(name: str, arguments: dict[str, str]) -> list[types.TextContent]:
     # Handle both video IDs and full URLs
     video_param = arguments["video_url"]
+    language = arguments.get("language", "en")
     with_timestamps = arguments.get("with_timestamps", False)
     try:
         video_id = extract_video_id(video_param)
     except ValueError:
         video_id = video_param  # Assume it's already a video ID
 
-    transcript_text = get_transcript(video_id, with_timestamps)
+    transcript_text = get_transcript(video_id, with_timestamps, language)
     
     return [
         types.TextContent(
