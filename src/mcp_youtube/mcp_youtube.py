@@ -27,6 +27,8 @@ def extract_video_id(url: str) -> str:
             return parse_qs(parsed.query)['v'][0]
         elif parsed.path.startswith('/v/'):
             return parsed.path[3:]
+        elif parsed.path.startswith('/shorts/'):
+            return parsed.path[8:]
     raise ValueError("Could not extract video ID from URL")
 
 def get_transcript(video_id: str, with_timestamps: bool = False, language: str = "en") -> str:
