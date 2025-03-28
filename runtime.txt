@@ -1,6 +1,0 @@
-streamlit==1.30.0
-pydantic==2.10.2
-pydantic-core==2.27.1
-uvicorn==0.22.0
-fastapi==0.100.0
-uv
