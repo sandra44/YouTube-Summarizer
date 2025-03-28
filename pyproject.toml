@@ -6,7 +6,6 @@ dependencies = [
     "mcp",
     "pydantic>=2.10.2",
     "youtube_transcript_api",
-    "python>=3.12"
 ]
 
 [build-system]
