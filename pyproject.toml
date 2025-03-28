@@ -5,7 +5,7 @@ description = "MCP server for fetching YouTube transcripts"
 dependencies = [
     "mcp",
     "pydantic>=2.10.2",
-    "youtube_transcript_api",
+    "youtube_transcript_api"
 ]
 
 [build-system]
