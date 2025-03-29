@@ -5,9 +5,9 @@ import tempfile
 import base64
 
 # Azure OpenAI API credentials
-AZURE_OPENAI_ENDPOINT = "https://sandr-m8rotipa-eastus2.cognitiveservices.azure.com"
-AZURE_OPENAI_KEY = "1wRkUmrtNcacZiSpb9I9sR0kZ8diEc4j0SePv6bwLHWmf31jtpHaJQQJ99BCACHYHv6XJ3w3AAAAACOGvhYZ"
-AZURE_DEPLOYMENT_NAME = "gpt-4o"  
+AZURE_OPENAI_ENDPOINT = "YOUR AZURE OPENAI ENDPOINT"
+AZURE_OPENAI_KEY = "YOUR AZURE OPENAI KEY"
+AZURE_DEPLOYMENT_NAME = "YOUR AZURE OPENAI DEPLOYMENT NAME"  
 
 # OpenAI API client setup
 client = openai.AzureOpenAI(
